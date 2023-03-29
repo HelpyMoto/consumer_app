@@ -20,43 +20,47 @@ const Login = ({navigation}) => {
   const [otp, setOtp] = useState('');
   const [confirm, setConfirm] = useState(null);
   const [loading, setLoading] = useState(false);
+  // const [authenticated, setAutheticated] = useState(true);
+
  
   
 
-  // useEffect(() => {
-  //  if(authenticated){
-  //   navigation.replace('Home',{
-  //     loggedUser:loggedUser
-  //   })
-  //  }
-  // }, [authenticated])
-  
-
-  const loginWithOtp = async number => {
-    setLoading(true);
-    try {
-      const cnfm = await auth().signInWithPhoneNumber(number);
-      setConfirm(cnfm);
-    } catch (error) {
-      console.log(error);
-    }
-    setLoading(false);
+  // const loginWithOtp = async number => {
+  //   setLoading(true);
+  //   try {
+  //     const cnfm = await auth().signInWithPhoneNumber(number);
+  //     setConfirm(cnfm);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  //   setLoading(false);
    
-  };
+  // };
 
-  async function confirmCode(otp) {
-    setLoading(true)
-    try {
-      await confirm.confirm(otp);
-      Alert.alert('login successfully');
-      setConfirm(null)
-    } catch (error) {
-      console.log('Invalid code.' + error);
-    }
-    setLoading(false);
-  }
+  // async function confirmCode(otp) {
+  //   setLoading(true)
+  //   try {
+  //     await confirm.confirm(otp);
+  //     Alert.alert('login successfully');
+  //     setConfirm(null)
+  //   } catch (error) {
+  //     console.log('Invalid code.' + error);
+  //   }
+  //   setLoading(false);
+  // }
 
-
+  // auth().onAuthStateChanged(user => {
+  //   if (user) {
+  //     // setAutheticated(true);
+  //     setLoggedUser(user);
+  //     storeData(loggedUser);
+  //     // Alert.alert("Login successfully 🎉🎉")
+  //     // navigation.navigate('Add info')
+  //   } else {
+  //     // setAutheticated(false);
+  //     // Alert.alert("Login failed!")
+  //   }
+  // });
   return (
     <KeyboardAvoidingView style={{flex: 1, backgroundColor: '#fff'}}>
       <ScrollView
@@ -91,7 +95,7 @@ const Login = ({navigation}) => {
                   backgroundColor: mobNo.length < 10 ? 'grey' : '#5D5FEF',
                 },
               ]}
-              onPress={() => loginWithOtp('+91' + mobNo)}>
+              onPress={() => {}}>
               {loading ? (
                 <ActivityIndicator color="#ffffff" size={34} />
               ) : (
@@ -125,9 +129,9 @@ const Login = ({navigation}) => {
                   marginLeft: 5,
                 }}
                 onPress={() => {
-                  setConfirm(null);
-                  setOtp('');
-                  setLoading(false)
+                  // setConfirm(null);
+                  // setOtp('');
+                  // setLoading(false)
                 }}>
                 <Text style={{color: '#fff', fontSize: 12, fontWeight: '900'}}>
                   Change Number
@@ -144,7 +148,9 @@ const Login = ({navigation}) => {
                   justifyContent: 'center',
                   marginLeft: 5,
                 }}
-                onPress={() =>{ loginWithOtp('+91' + mobNo);setOtp('');}}>
+                onPress={() =>{ 
+                  // loginWithOtp('+91' + mobNo);setOtp('');
+                  }}>
                 <Text style={{color: '#fff', fontSize: 12, fontWeight: '900'}}>
                   Resend Otp
                 </Text>
@@ -166,7 +172,11 @@ const Login = ({navigation}) => {
                   backgroundColor: otp.length < 6 ? 'grey' : '#5D5FEF',
                 },
               ]}
-              onPress={() => confirmCode(otp)}>
+              onPress={() => 
+              {
+                // confirmCode(otp)
+              }
+              }>
                {loading ? (
                 <ActivityIndicator color="#ffffff" size={34}/>
               ) : (
@@ -211,6 +221,33 @@ const Login = ({navigation}) => {
           </View>
         </View>
       </ScrollView>
+      { confirm && <View style={styles.infoBar}>
+      <View style={{flexDirection:'row',alignItems:'center',justifyContent:'center'}} >
+     <ActivityIndicator
+        size={24}
+        color={'#15ff00'}
+        hidesWhenStopped
+
+      />
+        <Text style={{color:'#fff',fontSize:14,fontWeight:'500',marginLeft:5}} >
+        
+          Auto Verifying, {mobNo}</Text>
+          </View>
+        <TouchableOpacity
+                style={{
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+                onPress={() => {
+                  // setConfirm(null);
+                  // setOtp('');
+                  // setLoading(false)
+                }}>
+                <Text style={{color: '#15ff00', fontSize: 15, fontWeight: '900'}}>
+                  EDIT PHONE
+                </Text>
+              </TouchableOpacity>
+      </View>}
     </KeyboardAvoidingView>
   );
 };
@@ -299,4 +336,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginHorizontal: 15,
   },
+  infoBar:{
+    width:'100%',
+    display:'flex',
+    flexDirection:'row',
+    alignItems:'center',
+    justifyContent:'space-around',
+    height:50,
+    backgroundColor:'#5D5FEF'
+  }
 });
