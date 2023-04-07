@@ -10,18 +10,18 @@ import {
   Alert,
   ActivityIndicator,
 } from 'react-native';
-import React, {useState,useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import auth from '@react-native-firebase/auth';
 
 
-const Login = ({navigation}) => {
+const Login = ({ navigation }) => {
   const [mobNo, setMobNo] = useState('');
   const [otp, setOtp] = useState('');
   const [confirm, setConfirm] = useState(null);
   const [loading, setLoading] = useState(false);
- 
-  
+
+
 
   // useEffect(() => {
   //  if(authenticated){
@@ -30,7 +30,7 @@ const Login = ({navigation}) => {
   //   })
   //  }
   // }, [authenticated])
-  
+
 
   const loginWithOtp = async number => {
     setLoading(true);
@@ -41,7 +41,7 @@ const Login = ({navigation}) => {
       console.log(error);
     }
     setLoading(false);
-   
+
   };
 
   async function confirmCode(otp) {
@@ -58,7 +58,7 @@ const Login = ({navigation}) => {
 
 
   return (
-    <KeyboardAvoidingView style={{flex: 1, backgroundColor: '#fff'}}>
+    <KeyboardAvoidingView style={{ flex: 1, backgroundColor: '#fff' }}>
       <ScrollView
         contentContainerStyle={styles.container}
         keyboardShouldPersistTaps="handled">
@@ -80,7 +80,7 @@ const Login = ({navigation}) => {
               keyboardType="numeric"
               placeholderTextColor="grey"
               maxLength={10}
-              
+
             />
 
             <TouchableOpacity
@@ -103,7 +103,7 @@ const Login = ({navigation}) => {
 
         {confirm && (
           <View style={styles.form}>
-            <View style={[styles.row, {marginBottom: 10}]}>
+            <View style={[styles.row, { marginBottom: 10 }]}>
               <Text
                 style={{
                   color: 'grey',
@@ -129,7 +129,7 @@ const Login = ({navigation}) => {
                   setOtp('');
                   setLoading(false)
                 }}>
-                <Text style={{color: '#fff', fontSize: 12, fontWeight: '900'}}>
+                <Text style={{ color: '#fff', fontSize: 12, fontWeight: '900' }}>
                   Change Number
                 </Text>
               </TouchableOpacity>
@@ -144,8 +144,8 @@ const Login = ({navigation}) => {
                   justifyContent: 'center',
                   marginLeft: 5,
                 }}
-                onPress={() =>{ loginWithOtp('+91' + mobNo);setOtp('');}}>
-                <Text style={{color: '#fff', fontSize: 12, fontWeight: '900'}}>
+                onPress={() => { loginWithOtp('+91' + mobNo); setOtp(''); }}>
+                <Text style={{ color: '#fff', fontSize: 12, fontWeight: '900' }}>
                   Resend Otp
                 </Text>
               </TouchableOpacity>
@@ -167,8 +167,8 @@ const Login = ({navigation}) => {
                 },
               ]}
               onPress={() => confirmCode(otp)}>
-               {loading ? (
-                <ActivityIndicator color="#ffffff" size={34}/>
+              {loading ? (
+                <ActivityIndicator color="#ffffff" size={34} />
               ) : (
                 <Text style={styles.btnText}>Verify Otp</Text>
               )}
@@ -183,19 +183,19 @@ const Login = ({navigation}) => {
             alignItems: 'center',
             marginTop: 10,
           }}>
-          <Text style={{textAlign: 'center', fontSize: 15, color: '#000'}}>
+          <Text style={{ textAlign: 'center', fontSize: 15, color: '#000' }}>
             Don't have account?{' '}
           </Text>
           <TouchableOpacity
-            style={{alignItems: 'center'}}
+            style={{ alignItems: 'center' }}
             onPress={() => navigation.replace('signup')}>
-            <Text style={{color: '#5D5FEF', fontWeight: '900', fontSize: 16}}>
+            <Text style={{ color: '#5D5FEF', fontWeight: '900', fontSize: 16 }}>
               Create
             </Text>
           </TouchableOpacity>
         </View>
         <View style={styles.col}>
-          <Text style={{fontSize: 16, color: 'grey', marginVertical: 20}}>
+          <Text style={{ fontSize: 16, color: 'grey', marginVertical: 20 }}>
             OR
           </Text>
           <View style={styles.row}>

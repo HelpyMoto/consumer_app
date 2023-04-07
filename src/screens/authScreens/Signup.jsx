@@ -8,42 +8,70 @@ import {
   KeyboardAvoidingView,
   Image,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 
-const Signup = ({navigation}) => {
+const Signup = ({ navigation }) => {
   const [actCreated, setActCreated] = useState(false);
+  const [fullname, setFullname] = useState('')
+  const [number, setNumber] = useState('')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [confirm, setConfirm] = useState('')
+
+
+  const Signup = async () => {
+    if (password === confirm) {
+      let data = await fetch(``, {
+        method: 'post',
+        body: JSON.stringify({ fullname, number, email, password }),
+        headers: {
+          'content-type': 'application/json'
+        }
+      })
+      data = await data.json();
+      if (data) {
+        setActCreated(true)
+      }
+      else {
+        console.log("error")
+      }
+    }
+    else {
+      console.log("pasword doesnot matched")
+    }
+  }
 
   const SelectCar = () => {
     return (
-      <View style={[styles.container, {paddingTop: 20}]}>
+      <View style={[styles.container, { paddingTop: 20 }]}>
         <Text style={styles.HEADER}>Select your vehicle </Text>
-        <View style={[styles.form, {marginTop: 0, paddingHorizontal: 20}]}>
+        <View style={[styles.form, { marginTop: 0, paddingHorizontal: 20 }]}>
           <Text
-            style={{alignSelf: 'flex-start', fontWeight: '800', marginTop: 10}}>
+            style={{ alignSelf: 'flex-start', fontWeight: '800', marginTop: 10 }}>
             Vehicle maker :{' '}
           </Text>
           <TextInput
-            style={[styles.input, {width: '100%'}]}
+            style={[styles.input, { width: '100%' }]}
             // onChangeText={onChangeNumber}
             // value=""
             placeholder="car maker e.g. Maruti suzuki"
             keyboardType="default"
           />
           <Text
-            style={{alignSelf: 'flex-start', fontWeight: '800', marginTop: 10}}>
+            style={{ alignSelf: 'flex-start', fontWeight: '800', marginTop: 10 }}>
             Vehicle model :{' '}
           </Text>
           <TextInput
-            style={[styles.input, {width: '100%'}]}
+            style={[styles.input, { width: '100%' }]}
             // onChangeText={onChangeNumber}
             // value=""
             placeholder="car maker e.g. Alto"
             keyboardType="default"
           />
           <TouchableOpacity
-            style={[styles.btn, {width: '100%'}]}
+            style={[styles.btn, { width: '100%' }]}
             onPress={() => navigation.replace('Home')}>
             <Text style={styles.btnText}>Add Car</Text>
           </TouchableOpacity>
@@ -57,7 +85,7 @@ const Signup = ({navigation}) => {
           }}
         />
         <ScrollView keyboardShouldPersistTaps="handled">
-          <Text style={{fontStyle: 'italic', color: '#ff0212'}}>
+          <Text style={{ fontStyle: 'italic', color: '#ff0212' }}>
             *select vehicle from below list
           </Text>
         </ScrollView>
@@ -68,7 +96,7 @@ const Signup = ({navigation}) => {
   // root component
 
   return (
-    <KeyboardAvoidingView style={{flex: 1, backgroundColor: '#fff'}}>
+    <KeyboardAvoidingView style={{ flex: 1, backgroundColor: '#fff' }}>
       {actCreated ? (
         <SelectCar />
       ) : (
@@ -76,68 +104,68 @@ const Signup = ({navigation}) => {
           contentContainerStyle={styles.container}
           keyboardShouldPersistTaps="handled">
           <View style={styles.bannerView}>
-          <Image
-            style={styles.banner}
-            source={require('../../assets/images/icon.png')}
-          />
+            <Image
+              style={styles.banner}
+              source={require('../../assets/images/icon.png')}
+            />
           </View>
           <Text style={styles.HEADER}>Welcome</Text>
           <View style={styles.form}>
             <TextInput
               style={styles.input}
-              // onChangeText={onChangeNumber}
-              value=""
+              onChangeText={(text) => setFullname(text)}
+              value={fullname}
               placeholder="full name"
             />
             <TextInput
               style={styles.input}
-              // onChangeText={onChangeNumber}
-              value=""
+              onChangeText={(text) => setNumber(text)}
+              value={number}
               placeholder="phone number"
               keyboardType="numeric"
             />
             <TextInput
               style={styles.input}
-              // onChangeText={onChangeNumber}
-              value=""
+              onChangeText={(text) => setEmail(text)}
+              value={email}
               placeholder="email"
             />
-            <Text style={{fontStyle: 'italic'}}>
+            <Text style={{ fontStyle: 'italic' }}>
               *Password must contain at least 8 characters.
             </Text>
             <TextInput
               style={styles.input}
-              // onChangeText={onChangeNumber}
-              // value=""
-              placeholder="password" 
+              placeholder="password"
               secureTextEntry={true}
+              onChangeText={(text) => setPassword(text)}
+              value={password}
             />
-              <TouchableOpacity
-          style={{
-            alignSelf: 'flex-end',
+            <TouchableOpacity
+              style={{
+                alignSelf: 'flex-end',
 
-          }}
-          >
-          <Text
-            style={{
-              color: '#5d5fefd4',
-              fontWeight: '900',
-              letterSpacing: 1,
-              marginBottom: 10,
-            }}>
-            forgot password
-          </Text>
-          </TouchableOpacity>
+              }}
+            >
+              <Text
+                style={{
+                  color: '#5d5fefd4',
+                  fontWeight: '900',
+                  letterSpacing: 1,
+                  marginBottom: 10,
+                }}>
+                forgot password
+              </Text>
+            </TouchableOpacity>
             <TextInput
               style={styles.input}
-              // onChangeText={onChangeNumber}
-              value=""
+              onChangeText={(text) => setConfirm(text)}
+              value={confirm}
               placeholder="confirm password"
             />
 
             <TouchableOpacity
               style={styles.btn}
-              onPress={() => setActCreated(true)}>
+              onPress={Signup} >
               <Text style={styles.btnText}>Sign Up</Text>
             </TouchableOpacity>
           </View>
@@ -148,35 +176,35 @@ const Signup = ({navigation}) => {
               alignItems: 'center',
               marginTop: 10,
             }}>
-            <Text style={{textAlign: 'center', fontSize: 15, color: '#000'}}>
+            <Text style={{ textAlign: 'center', fontSize: 15, color: '#000' }}>
               Already have an account ?{' '}
             </Text>
             <TouchableOpacity
-              style={{alignItems: 'center'}}
+              style={{ alignItems: 'center' }}
               onPress={() => navigation.replace('login')}>
-              <Text style={{color: '#5D5FEF', fontWeight: '900', fontSize: 16}}>
+              <Text style={{ color: '#5D5FEF', fontWeight: '900', fontSize: 16 }}>
                 Login
               </Text>
             </TouchableOpacity>
           </View>
           <View
-        style={styles.col}
-        >
-          <Text style={{fontSize:16,color:'grey',marginVertical:20}}>OR</Text>
-          <View
-          style={styles.row}
+            style={styles.col}
           >
-            <TouchableOpacity style={styles.icon}>
-            <Icon name='google' size={28} color="#5D5FEF"/>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.icon}>
-            <Icon name="facebook" size={28} color="#5D5FEF" />
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.icon}>
-            <Icon name="twitter" size={28} color="#5D5FEF" />
-            </TouchableOpacity>
+            <Text style={{ fontSize: 16, color: 'grey', marginVertical: 20 }}>OR</Text>
+            <View
+              style={styles.row}
+            >
+              <TouchableOpacity style={styles.icon}>
+                <Icon name='google' size={28} color="#5D5FEF" />
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.icon}>
+                <Icon name="facebook" size={28} color="#5D5FEF" />
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.icon}>
+                <Icon name="twitter" size={28} color="#5D5FEF" />
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
         </ScrollView>
       )}
     </KeyboardAvoidingView>
@@ -199,8 +227,8 @@ const styles = StyleSheet.create({
   },
   banner: {
     height: 200,
-    width:150,
-    marginBottom:20
+    width: 150,
+    marginBottom: 20
   },
   HEADER: {
     fontSize: 24,
@@ -239,33 +267,33 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: '900',
   },
-  col:{
-    display:'flex',
-    flexDirection:'column',
-    alignItems:'center',
-    justifyContent:'space-around',
-    width:'100%'
+  col: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+    width: '100%'
 
   },
-  row:{
-    display:'flex',
-    flexDirection:'row',
-    alignItems:'center',
-    justifyContent:'center',
-    flexWrap:'nowrap',
-    width:'100%',
-    
+  row: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexWrap: 'nowrap',
+    width: '100%',
+
   },
-  icon:{
-    borderColor:"#5D5FEF",
-    borderWidth:1,
-    padding:5,
-    borderRadius:27,
-    height:40,
-    width:40,
-    display:'flex',
-    alignItems:'center',
-    justifyContent:'center',
-    marginHorizontal:15
+  icon: {
+    borderColor: "#5D5FEF",
+    borderWidth: 1,
+    padding: 5,
+    borderRadius: 27,
+    height: 40,
+    width: 40,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginHorizontal: 15
   }
 });
