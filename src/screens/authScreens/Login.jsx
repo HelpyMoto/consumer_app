@@ -13,13 +13,15 @@ import {
 import React, { useState, useEffect } from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import auth from '@react-native-firebase/auth';
+import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
 
 
 const Login = ({ navigation }) => {
-  const [mobNo, setMobNo] = useState('');
+  const [phoneNo, setPhoneNo] = useState('');
   const [otp, setOtp] = useState('');
   const [confirm, setConfirm] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [log, setLog] = useState(null)
 
 
 
@@ -36,12 +38,12 @@ const Login = ({ navigation }) => {
     setLoading(true);
     try {
       const cnfm = await auth().signInWithPhoneNumber(number);
+      otpsign(cnfm.verificationId)
       setConfirm(cnfm);
     } catch (error) {
       console.log(error);
     }
     setLoading(false);
-
   };
 
   async function confirmCode(otp) {
@@ -56,6 +58,38 @@ const Login = ({ navigation }) => {
     setLoading(false);
   }
 
+  async function otpsign(userId) {
+    let data = await fetch(`https://service-provider-apis.onrender.com/api/v1/user/otpsign`, {
+      method: 'post',
+      body: JSON.stringify({ userId, phoneNo }),
+      headers: {
+        'content-type': 'application/type'
+      }
+    })
+    data = await data.json()
+    console.log(data)
+  }
+
+
+  const signIn = async () => {
+    try {
+      await GoogleSignin.hasPlayServices();
+      const userInfo = await GoogleSignin.signIn();
+      console.log(userInfo)
+    } catch (error) {
+      console.log(error)
+      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+
+        // user cancelled the login flow
+      } else if (error.code === statusCodes.IN_PROGRESS) {
+        // operation (e.g. sign in) is in progress already
+      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+        // play services not available or outdated
+      } else {
+        // some other error happened
+      }
+    }
+  };
 
   return (
     <KeyboardAvoidingView style={{ flex: 1, backgroundColor: '#fff' }}>
@@ -74,8 +108,8 @@ const Login = ({ navigation }) => {
           <View style={styles.form}>
             <TextInput
               style={styles.input}
-              onChangeText={text => setMobNo(text)}
-              value={mobNo}
+              onChangeText={text => setPhoneNo(text)}
+              value={phoneNo}
               placeholder="Enter Your Phone Number"
               keyboardType="numeric"
               placeholderTextColor="grey"
@@ -84,14 +118,14 @@ const Login = ({ navigation }) => {
             />
 
             <TouchableOpacity
-              disabled={mobNo.length == 10 ? false : true}
+              disabled={phoneNo.length == 10 ? false : true}
               style={[
                 styles.btn,
                 {
-                  backgroundColor: mobNo.length < 10 ? 'grey' : '#5D5FEF',
+                  backgroundColor: phoneNo.length < 10 ? 'grey' : '#5D5FEF',
                 },
               ]}
-              onPress={() => loginWithOtp('+91' + mobNo)}>
+              onPress={() => loginWithOtp('+91' + phoneNo)}>
               {loading ? (
                 <ActivityIndicator color="#ffffff" size={34} />
               ) : (
@@ -111,10 +145,10 @@ const Login = ({ navigation }) => {
                   alignSelf: 'flex-start',
                   fontWeight: '900',
                 }}>
-                +91 {mobNo}
+                +91 {phoneNo}
               </Text>
               <TouchableOpacity
-                disabled={mobNo.length == 10 ? false : true}
+                disabled={phoneNo.length == 10 ? false : true}
                 style={{
                   backgroundColor: '#5D5FEF',
                   height: 25,
@@ -134,7 +168,7 @@ const Login = ({ navigation }) => {
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
-                disabled={mobNo.length == 10 ? false : true}
+                disabled={phoneNo.length == 10 ? false : true}
                 style={{
                   backgroundColor: '#5D5FEF',
                   height: 25,
@@ -144,7 +178,7 @@ const Login = ({ navigation }) => {
                   justifyContent: 'center',
                   marginLeft: 5,
                 }}
-                onPress={() => { loginWithOtp('+91' + mobNo); setOtp(''); }}>
+                onPress={() => { loginWithOtp('+91' + phoneNo); setOtp(''); }}>
                 <Text style={{ color: '#fff', fontSize: 12, fontWeight: '900' }}>
                   Resend Otp
                 </Text>
@@ -159,7 +193,7 @@ const Login = ({ navigation }) => {
               keyboardType="number-pad"
             />
             <TouchableOpacity
-              disabled={mobNo.length == 10 ? false : true}
+              disabled={phoneNo.length == 10 ? false : true}
               style={[
                 styles.btn,
                 {
@@ -175,6 +209,49 @@ const Login = ({ navigation }) => {
             </TouchableOpacity>
           </View>
         )}
+
+        {/* Email login */}
+        {
+          log ?
+            <View style={styles.form}>
+              <TextInput
+                style={styles.input}
+                onChangeText={text => setPhoneNo(text)}
+                value={phoneNo}
+                placeholder="Enter Your Email"
+                keyboardType="numeric"
+                placeholderTextColor="grey"
+                maxLength={10}
+              />
+              <TextInput
+                style={styles.input}
+                onChangeText={text => setPhoneNo(text)}
+                value={phoneNo}
+                placeholder="Enter Your Password"
+                keyboardType="numeric"
+                placeholderTextColor="grey"
+                maxLength={10}
+              />
+
+              <TouchableOpacity
+                disabled={phoneNo.length == 10 ? false : true}
+                style={[
+                  styles.btn,
+                  {
+                    backgroundColor: phoneNo.length < 10 ? 'grey' : '#5D5FEF',
+                  },
+                ]}
+                onPress={() => loginWithOtp('+91' + phoneNo)}>
+                {loading ? (
+                  <ActivityIndicator color="#ffffff" size={34} />
+                ) : (
+                  <Text style={styles.btnText}>Login</Text>
+                )}
+              </TouchableOpacity>
+            </View> : null
+        }
+
+
         {/* </View> */}
         <View
           style={{
@@ -199,7 +276,7 @@ const Login = ({ navigation }) => {
             OR
           </Text>
           <View style={styles.row}>
-            <TouchableOpacity style={styles.icon}>
+            <TouchableOpacity style={styles.icon} onPress={() => signIn()}>
               <Icon name="google" size={28} color="#5D5FEF" />
             </TouchableOpacity>
             <TouchableOpacity style={styles.icon}>
@@ -207,6 +284,25 @@ const Login = ({ navigation }) => {
             </TouchableOpacity>
             <TouchableOpacity style={styles.icon}>
               <Icon name="twitter" size={28} color="#5D5FEF" />
+            </TouchableOpacity>
+          </View>
+        </View>
+        <View style={styles.col}>
+          <Text style={{ fontSize: 16, color: 'grey', marginVertical: 20 }}>
+            OR
+          </Text>
+          <View style={styles.row}>
+            <Text style={{ textAlign: 'center', fontSize: 15, color: '#000' }}>
+              Login with email?{' '}
+            </Text>
+            <TouchableOpacity
+              style={{ alignItems: 'center' }}
+              onPress={() => navigation.replace('emaillogin')}
+            >
+              <Text style={{ color: '#5D5FEF', fontWeight: '900', fontSize: 16 }}>
+
+                Login
+              </Text>
             </TouchableOpacity>
           </View>
         </View>

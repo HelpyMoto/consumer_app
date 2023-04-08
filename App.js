@@ -1,6 +1,6 @@
-import {StatusBar} from 'react-native';
-import React, {useState, useEffect} from 'react';
-import {NavigationContainer} from '@react-navigation/native';
+import { StatusBar } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { NavigationContainer } from '@react-navigation/native';
 import AuthStack from './src/navigation/AuthStack';
 import RootStack from './src/navigation/RootStack';
 import auth from '@react-native-firebase/auth';

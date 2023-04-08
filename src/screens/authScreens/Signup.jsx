@@ -7,6 +7,7 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Image,
+  Alert
 } from 'react-native';
 import React, { useState } from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -14,8 +15,9 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 
 const Signup = ({ navigation }) => {
   const [actCreated, setActCreated] = useState(false);
-  const [fullname, setFullname] = useState('')
-  const [number, setNumber] = useState('')
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
+  const [phoneNo, setPhoneNo] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirm, setConfirm] = useState('')
@@ -23,23 +25,25 @@ const Signup = ({ navigation }) => {
 
   const Signup = async () => {
     if (password === confirm) {
-      let data = await fetch(``, {
+      let data = await fetch(`https://service-provider-apis.onrender.com/api/v1/user/signup`, {
         method: 'post',
-        body: JSON.stringify({ fullname, number, email, password }),
+        body: JSON.stringify({ firstName, lastName, phoneNo, email, password }),
         headers: {
           'content-type': 'application/json'
         }
       })
       data = await data.json();
-      if (data) {
+      if (data.success === true) {
         setActCreated(true)
+        Alert.alert('Signup successfully');
       }
       else {
-        console.log("error")
+        Alert.alert('Signup failed');
       }
     }
     else {
-      console.log("pasword doesnot matched")
+      Alert.alert('Password doesnot matched');
+
     }
   }
 
@@ -113,14 +117,20 @@ const Signup = ({ navigation }) => {
           <View style={styles.form}>
             <TextInput
               style={styles.input}
-              onChangeText={(text) => setFullname(text)}
-              value={fullname}
-              placeholder="full name"
+              onChangeText={(text) => setFirstName(text)}
+              value={firstName}
+              placeholder="first name"
             />
             <TextInput
               style={styles.input}
-              onChangeText={(text) => setNumber(text)}
-              value={number}
+              onChangeText={(text) => setLastName(text)}
+              value={lastName}
+              placeholder="last name"
+            />
+            <TextInput
+              style={styles.input}
+              onChangeText={(text) => setPhoneNo(text)}
+              value={phoneNo}
               placeholder="phone number"
               keyboardType="numeric"
             />

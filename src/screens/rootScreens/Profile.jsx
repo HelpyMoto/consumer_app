@@ -1,11 +1,11 @@
-import {Button, StyleSheet, Text, View, ScrollView, Image, TouchableOpacity} from 'react-native';
-import React, {useEffect, useState} from 'react';
+import { Button, StyleSheet, Text, View, ScrollView, Image, TouchableOpacity } from 'react-native';
+import React, { useEffect, useState } from 'react';
 import auth from '@react-native-firebase/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {profileOptions} from '../../components/data/DATA';
+import { profileOptions } from '../../components/data/DATA';
 import Icon from 'react-native-vector-icons/AntDesign';
 
-const Profile = () => {
+const Profile = ({ navigation }) => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
@@ -25,12 +25,22 @@ const Profile = () => {
     }
   };
 
+  const logout = () => {
+    auth()
+      .signOut()
+      .then(() => {
+        console.log('sign out');
+      })
+    AsyncStorage.clear()
+    navigation.replace('login')
+  }
+
   return (
-    <ScrollView 
-    style={{flex: 1}}
+    <ScrollView
+      style={{ flex: 1 }}
     >
       {user && (
-        <View style={[styles.col, {marginVertical: 35}]}>
+        <View style={[styles.col, { marginVertical: 35 }]}>
           <Image
             style={styles.pic}
             source={require('../../assets/images/logo1.jpg')}
@@ -45,10 +55,10 @@ const Profile = () => {
             }}>
             {user.displayName || 'Rohit Barate'}
           </Text>
-          <Text style={{fontSize: 14, color: '#000', marginTop: 2}}>
+          <Text style={{ fontSize: 14, color: '#000', marginTop: 2 }}>
             {user.phoneNumber}
           </Text>
-          <Text style={{fontSize: 14, color: '#000', marginTop: 2}}>
+          <Text style={{ fontSize: 14, color: '#000', marginTop: 2 }}>
             {user.email || 'rohitbarate100@gmail.com'}{' '}
           </Text>
         </View>
@@ -57,23 +67,19 @@ const Profile = () => {
       {profileOptions.map(opt => {
         return (
           <TouchableOpacity key={opt.id} >
-          <View style={styles.row}>
-            <View style={[styles.col,{alignItems:'flex-start'}]}>
-              <Text style={{color:'#000',fontSize:20,fontWeight:'bold'}} >{opt.option}</Text>
-              <Text style={{color:'grey',fontSize:14}} >{opt.co_options}</Text>
+            <View style={styles.row}>
+              <View style={[styles.col, { alignItems: 'flex-start' }]}>
+                <Text style={{ color: '#000', fontSize: 20, fontWeight: 'bold' }} >{opt.option}</Text>
+                <Text style={{ color: 'grey', fontSize: 14 }} >{opt.co_options}</Text>
+              </View>
+              <Icon name="right" size={20} color="#000" />
             </View>
-            <Icon name="right" size={20} color="#000" />
-          </View>
           </TouchableOpacity>
         );
       })}
       <TouchableOpacity onPress={() =>
-          auth()
-            .signOut()
-            .then(() => {
-              console.log('sign out');
-            })
-        } style={styles.BTN}>
+        logout()
+      } style={styles.BTN}>
         <Text style={styles.btnText}>Log out</Text>
       </TouchableOpacity>
     </ScrollView>
@@ -100,12 +106,12 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     textAlign: 'center',
-    borderBottomColor:'#000',
-    borderBottomWidth:0.5,
-    marginBottom:10,
-    height:60,
-    paddingHorizontal:10,
-    width:'100%'
+    borderBottomColor: '#000',
+    borderBottomWidth: 0.5,
+    marginBottom: 10,
+    height: 60,
+    paddingHorizontal: 10,
+    width: '100%'
   },
   BTN: {
     width: "80%",
@@ -116,8 +122,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     borderRadius: 8,
     marginTop: 8,
-    marginBottom:16,
-    alignSelf:'center'
+    marginBottom: 16,
+    alignSelf: 'center'
   },
   btnText: {
     fontSize: 16,
