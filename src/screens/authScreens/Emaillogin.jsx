@@ -19,10 +19,21 @@ const Emaillogin = ({ navigation }) => {
     const [email, setEmail] = useState('')
     const [loading, setLoading] = useState(false)
     const [password, setPassword] = useState('')
+    const [err, setErr] = useState('')
+
+    const validate = () => {
+        setErr('')
+        if (email === '' || password === '') {
+            setErr('*Empty details')
+            return false;
+        }
+        return true;
+    }
 
     const login = async () => {
+       
         setLoading(true)
-        if (email && password) {
+        if (validate()) {
             let data = await fetch(`https://service-provider-apis.onrender.com/api/v1/user/login`, {
                 method: "post",
                 body: JSON.stringify({ email, password }),
@@ -51,7 +62,7 @@ const Emaillogin = ({ navigation }) => {
             const Val = JSON.stringify(value);
             await AsyncStorage.setItem('@user_info', Val);
             let data = await AsyncStorage.getItem('@user_info');
-            if(data){
+            if (data) {
                 navigation.replace('rootstack')
             }
         } catch (e) {
@@ -82,6 +93,9 @@ const Emaillogin = ({ navigation }) => {
                         placeholder="Enter Your Email"
                         placeholderTextColor="grey"
                     />
+                    <Text style={{ fontStyle: 'italic' }}>
+                        {err}
+                    </Text>
                     <TextInput
                         style={styles.input}
                         onChangeText={text => setPassword(text)}
@@ -89,6 +103,9 @@ const Emaillogin = ({ navigation }) => {
                         placeholder="Enter Your Password"
                         placeholderTextColor="grey"
                     />
+                    <Text style={{ fontStyle: 'italic' }}>
+                        {err}
+                    </Text>
 
                     <TouchableOpacity
                         style={[

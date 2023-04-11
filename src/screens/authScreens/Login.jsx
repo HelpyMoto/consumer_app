@@ -58,6 +58,8 @@ const Login = ({ navigation }) => {
     setLoading(false);
   }
 
+
+
   async function otpsign(userId) {
     let data = await fetch(`https://service-provider-apis.onrender.com/api/v1/user/otpsign`, {
       method: 'post',
@@ -71,25 +73,25 @@ const Login = ({ navigation }) => {
   }
 
 
-  const signIn = async () => {
-    try {
-      await GoogleSignin.hasPlayServices();
-      const userInfo = await GoogleSignin.signIn();
-      console.log(userInfo)
-    } catch (error) {
-      console.log(error)
-      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+  // const signIn = async () => {
+  //   try {
+  //     await GoogleSignin.hasPlayServices();
+  //     const userInfo = await GoogleSignin.signIn();
+  //     console.log(userInfo)
+  //   } catch (error) {
+  //     console.log(error)
+  //     if (error.code === statusCodes.SIGN_IN_CANCELLED) {
 
-        // user cancelled the login flow
-      } else if (error.code === statusCodes.IN_PROGRESS) {
-        // operation (e.g. sign in) is in progress already
-      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-        // play services not available or outdated
-      } else {
-        // some other error happened
-      }
-    }
-  };
+  //       // user cancelled the login flow
+  //     } else if (error.code === statusCodes.IN_PROGRESS) {
+  //       // operation (e.g. sign in) is in progress already
+  //     } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+  //       // play services not available or outdated
+  //     } else {
+  //       // some other error happened
+  //     }
+  //   }
+  // };
 
   return (
     <KeyboardAvoidingView style={{ flex: 1, backgroundColor: '#fff' }}>

@@ -4,6 +4,7 @@ import auth from '@react-native-firebase/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { profileOptions } from '../../components/data/DATA';
 import Icon from 'react-native-vector-icons/AntDesign';
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 
 const Profile = ({ navigation }) => {
   const [user, setUser] = useState(null);
@@ -35,6 +36,23 @@ const Profile = ({ navigation }) => {
     navigation.replace('login')
   }
 
+  const options = {
+    title: 'Select Image',
+    type: 'libary',
+    options: {
+      maxHeight: 200,
+      maxWidth: 200,
+      selectionLimit: 1,
+      mediaType: 'photo',
+      includeBase64: false,
+    }
+  }
+
+  const openGallery = async () => {
+    const result = await launchImageLibrary(options);
+    console.log(result)
+  }
+
   return (
     <ScrollView
       style={{ flex: 1 }}
@@ -61,7 +79,19 @@ const Profile = ({ navigation }) => {
           <Text style={{ fontSize: 14, color: '#000', marginTop: 2 }}>
             {user.email || 'rohitbarate100@gmail.com'}{' '}
           </Text>
+          <TouchableOpacity style={{
+            width: 100,
+            alignSelf: "center",
+            backgroundColor: "red",
+            marginTop: 10,
+            borderRadius: 5
+          }} onPress={() => openGallery()}><Text style={{
+            textAlign: "center",
+            fontSize: 20,
+            color: "#fff"
+          }}>Edit</Text></TouchableOpacity>
         </View>
+
       )}
 
       {profileOptions.map(opt => {
